@@ -2,7 +2,7 @@
 /dist
 /node_modules
 /generations
-./hashtag.png
+hashtag.png
 
 # Logs
 logs
