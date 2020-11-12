@@ -6,8 +6,12 @@ export class PostService {
   constructor(private httpService: HttpService) {}
 
   getRandomPost() {
+    const clientId = process.env.UNSPLASH_CLIENT_ID;
+    const keyword = 'woman';
+    const requestString = `https://api.unsplash.com/search/photos/?client_id=${clientId}&query=${keyword}`;
+
     return this.httpService
-      .get('https://jsonplaceholder.typicode.com/todos/1')
+      .get(requestString)
       .pipe(map((response) => response.data));
   }
 }
