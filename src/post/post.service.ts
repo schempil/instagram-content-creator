@@ -67,9 +67,6 @@ export class PostService {
 
 		const randomPosition = Math.floor(Math.random() * (5 - 1) + 1)
 
-		console.log('### randomPosition', randomPosition)
-		console.log('### Object.values(labelPositions)', Object.values(labelPositions))
-
 		const position = Object.values(labelPositions)[randomPosition]
 
 		image.blit(overlay, position.x, position.y)
