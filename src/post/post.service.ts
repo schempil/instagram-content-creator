@@ -5,9 +5,8 @@ import { map } from 'rxjs/operators';
 export class PostService {
   constructor(private httpService: HttpService) {}
 
-  async getRandomPost() {
-    const clientId = process.env.UNSPLASH_CLIENT_ID;
-    const keyword = 'woman';
+  async getPostForKeyword(keyword: string) {
+    const clientId = process.env.UNSPLASH_CLIENT_ID
     const requestString = `https://api.unsplash.com/photos/random?client_id=${clientId}&query=${keyword}`
 
 		const photo = await this.httpService
@@ -18,20 +17,25 @@ export class PostService {
 		const file = await this.downloadPhoto(photo.id, keyword, photo.links.download)
 
 		setTimeout(() => {
-			this.manipulatePhoto(file)
+			this.cropPhoto(file)
 		}, 3000)
 
 		return photo
   }
 
-  async manipulatePhoto(file: any) {
+  async cropPhoto(file: any) {
   	const jimp = require('jimp')
 
-		const image = await jimp.read(file.filePath);
+		const image = await jimp.read(file.filePath)
+		const font = await jimp.loadFont(jimp.FONT_SANS_128_BLACK)
 
-		await image.cover(1080, 1080)
+		image.cover(1080, 1080)
 
-		await image.writeAsync(`${file.directory}/${file.id}_MOD.png`);
+		const overlay = await jimp.read('./hashtag.png');
+
+		image.blit(overlay, 0, 0);
+
+		await image.writeAsync(`${file.directory}/${file.id}_MOD_BLACK.png`)
 
 		return new Promise((resolve, reject) => {
 			resolve(true)
@@ -45,7 +49,7 @@ export class PostService {
 		const directory = `./generations/${keyword}`
 
 		if (!fs.existsSync(directory)){
-			fs.mkdirSync(directory);
+			fs.mkdirSync(directory)
 		}
 
 		const file = `${id}.png`

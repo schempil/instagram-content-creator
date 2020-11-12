@@ -1,12 +1,12 @@
-import {Controller, Get} from '@nestjs/common';
+import {Controller, Get, Param} from '@nestjs/common';
 import {PostService} from './post.service';
 
 @Controller()
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
-  @Get('random')
-  getRandomPost(): any {
-    return this.postService.getRandomPost()
+  @Get('post/:keyword')
+  getPost(@Param() params): any {
+    return this.postService.getPostForKeyword(params.keyword)
   }
 }
