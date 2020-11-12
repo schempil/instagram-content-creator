@@ -44,31 +44,65 @@ export class PostService {
 		]);
 
   	const color = Math.round(Math.random()) > 0 ? '#000' : '#FFF'
+		const padding = 30
+
+		const fonts = {
+  		Anton: {
+  			font: '150px Anton',
+				localFontPath: './fonts/Anton/Anton-Regular.ttf',
+				localFontName: 'Anton'
+			},
+  		Dancing_Script: {
+  			font: '150px Dancing_Script',
+				localFontPath: './fonts/Dancing_Script/DancingScript-VariableFont_wght.ttf',
+				localFontName: 'Dancing_Script'
+			},
+  		Lobster: {
+  			font: '150px Lobster',
+				localFontPath: './fonts/Lobster/Lobster-Regular.ttf',
+				localFontName: 'Lobster'
+			},
+  		MontserratRegular: {
+  			font: '150px Montserrat-Regular',
+				localFontPath: './fonts/Montserrat/Montserrat-Regular.ttf',
+				localFontName: 'Montserrag-Regular'
+			},
+  		Roboto: {
+  			font: '150px Roboto-Regular',
+				localFontPath: './fonts/Roboto/Roboto-Regular.ttf',
+				localFontName: 'Roboto-Regular'
+			},
+  		SourceSansProRegular: {
+  			font: '150px SourceSansPro-Regular',
+				localFontPath: './fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf',
+				localFontName: 'SourceSansPro-Regular'
+			},
+		}
+
+		const font = Object.values(fonts)[Math.floor(Math.random() * (6 - 1) + 1)]
 
 		fs.writeFileSync('./hashtag.png', text2png(`#${keyword}`, {
-			font: '150px Lobster',
-			localFontPath: './fonts/Lobster/Lobster-Regular.ttf',
-			localFontName: 'Lobster',
+			font: font.font,
+			localFontPath: font.localFontPath,
+			localFontName: font.localFontName,
 			borderWidth: Math.round(Math.random()) > 0 ? 10 : 0,
 			borderColor: color,
 			color: color,
-			padding: 30
+			padding: padding
 		}))
 
 		const overlay = await jimp.read('./hashtag.png');
 		const dimensions = sizeOf('./hashtag.png')
 
 		const labelPositions = {
-			TOPLEFT: {x: 20, y: 20},
-			TOPRIGHT: {x: (1080 - dimensions.width - 20), y: 20},
-			BOTTOMLEFT: {x: 20, y: (1080 - dimensions.height - 20)},
-			BOTTOMRIGHT: {x: (1080 - dimensions.width - 20), y: (1080 - dimensions.height - 20)},
+			TOPLEFT: {x: padding, y: padding},
+			TOPRIGHT: {x: (1080 - dimensions.width - padding), y: padding},
+			BOTTOMLEFT: {x: padding, y: (1080 - dimensions.height - padding)},
+			BOTTOMRIGHT: {x: (1080 - dimensions.width - padding), y: (1080 - dimensions.height - padding)},
 			CENTERED: {x: (1080 / 2) - (dimensions.width / 2), y: (1080 / 2) - (dimensions.height / 2)},
 		}
 
-		const randomPosition = Math.floor(Math.random() * (5 - 1) + 1)
-
-		const position = Object.values(labelPositions)[randomPosition]
+		const position = Object.values(labelPositions)[Math.floor(Math.random() * (5 - 1) + 1)]
 
 		image.blit(overlay, position.x, position.y)
 
