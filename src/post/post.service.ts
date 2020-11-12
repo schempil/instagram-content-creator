@@ -43,7 +43,7 @@ export class PostService {
 			{ apply: 'spin', params: [hueSpin] }
 		]);
 
-  	const color = Math.round(Math.random()) > 0 ? '#000' : '#FFF'
+  	const isWhite = Math.round(Math.random()) > 0
 		const padding = 30
 
 		const fonts = {
@@ -86,8 +86,9 @@ export class PostService {
 			localFontPath: font.localFontPath,
 			localFontName: font.localFontName,
 			borderWidth: Math.round(Math.random()) > 0 ? 10 : 0,
-			borderColor: color,
-			color: color,
+			borderColor: isWhite ? '#fff' : '#000',
+			backgroundColor: !isWhite ? '#fff' : '#000',
+			color: isWhite ? '#fff' : '#000',
 			padding: padding
 		}))
 
