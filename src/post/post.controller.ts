@@ -9,9 +9,4 @@ export class PostController {
   getRandomPost(): any {
     return this.postService.getRandomPost()
   }
-
-  @Get('download')
-  downloadPhoto(): any {
-    return this.postService.donwloadPhoto()
-  }
 }

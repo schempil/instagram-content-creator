@@ -10,15 +10,17 @@ export class PostService {
     const keyword = 'woman';
     const requestString = `https://api.unsplash.com/photos/random?client_id=${clientId}&query=${keyword}`
 
-	const photo = await this.httpService
-	  .get(requestString)
-	  .pipe(map((response) => response.data))
-	  .toPromise()
+		const photo = await this.httpService
+			.get(requestString)
+			.pipe(map((response) => response.data))
+			.toPromise()
 
-    return photo
+		await this.downloadPhoto(photo.links.download)
+
+		return photo
   }
 
-  async donwloadPhoto(download: string) {
+  async downloadPhoto(download: string) {
 
 		const fs = require('fs')
 
@@ -36,6 +38,5 @@ export class PostService {
 			writer.on('finish', resolve)
 			writer.on('error', reject)
 		})
-
 	}
 }
