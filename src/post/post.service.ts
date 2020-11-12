@@ -16,14 +16,29 @@ export class PostService {
 			.toPromise()
 
 		const filePath = await this.downloadPhoto(photo.id, keyword, photo.links.download)
-		
-		this.manipulatePhoto(filePath)
 
-		return photo
+		setTimeout(() => {
+			this.manipulatePhoto(filePath)
+
+			return photo
+		}, 5000)
   }
 
-  manipulatePhoto(filePath: string) {
+  async manipulatePhoto(filePath: string) {
   	console.log('### manipul... uhm make it beautiful!', filePath)
+
+  	const jimp = require('jimp')
+
+		const image = await jimp.read(filePath);
+
+		await image.cover(1080, 1080)
+
+		await image.writeAsync(`./generations/woman/MOD.png`);
+
+		return new Promise((resolve, reject) => {
+			resolve(true)
+		})
+
 	}
 
   async downloadPhoto(id: string, keyword: string, download: string): Promise<string> {
