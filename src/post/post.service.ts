@@ -15,33 +15,30 @@ export class PostService {
 			.pipe(map((response) => response.data))
 			.toPromise()
 
-		const filePath = await this.downloadPhoto(photo.id, keyword, photo.links.download)
+		const file = await this.downloadPhoto(photo.id, keyword, photo.links.download)
 
 		setTimeout(() => {
-			this.manipulatePhoto(filePath)
+			this.manipulatePhoto(file)
+		}, 3000)
 
-			return photo
-		}, 5000)
+		return photo
   }
 
-  async manipulatePhoto(filePath: string) {
-  	console.log('### manipul... uhm make it beautiful!', filePath)
-
+  async manipulatePhoto(file: any) {
   	const jimp = require('jimp')
 
-		const image = await jimp.read(filePath);
+		const image = await jimp.read(file.filePath);
 
 		await image.cover(1080, 1080)
 
-		await image.writeAsync(`./generations/woman/MOD.png`);
+		await image.writeAsync(`${file.directory}/${file.id}_MOD.png`);
 
 		return new Promise((resolve, reject) => {
 			resolve(true)
 		})
-
 	}
 
-  async downloadPhoto(id: string, keyword: string, download: string): Promise<string> {
+  async downloadPhoto(id: string, keyword: string, download: string): Promise<any> {
 
 		const fs = require('fs')
 
@@ -51,7 +48,9 @@ export class PostService {
 			fs.mkdirSync(directory);
 		}
 
-		const filePath = `${directory}/${id}.png`
+		const file = `${id}.png`
+
+		const filePath = `${directory}/${file}`
 
 		const writer = fs.createWriteStream(filePath)
 
@@ -64,7 +63,7 @@ export class PostService {
 		response.data.pipe(writer)
 
 		return new Promise((resolve, reject) => {
-			writer.on('finish', resolve(filePath))
+			writer.on('finish', resolve({ id, directory, file, filePath }))
 			writer.on('error', reject)
 		})
 	}
