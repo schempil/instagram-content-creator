@@ -15,16 +15,30 @@ export class PostService {
 			.pipe(map((response) => response.data))
 			.toPromise()
 
-		await this.downloadPhoto(photo.links.download)
+		const filePath = await this.downloadPhoto(photo.id, keyword, photo.links.download)
+		
+		this.manipulatePhoto(filePath)
 
 		return photo
   }
 
-  async downloadPhoto(download: string) {
+  manipulatePhoto(filePath: string) {
+  	console.log('### manipul... uhm make it beautiful!', filePath)
+	}
+
+  async downloadPhoto(id: string, keyword: string, download: string): Promise<string> {
 
 		const fs = require('fs')
 
-		const writer = fs.createWriteStream('./generations/image.png')
+		const directory = `./generations/${keyword}`
+
+		if (!fs.existsSync(directory)){
+			fs.mkdirSync(directory);
+		}
+
+		const filePath = `${directory}/${id}.png`
+
+		const writer = fs.createWriteStream(filePath)
 
 		const response = await this.httpService.axiosRef({
 			url: download,
@@ -35,7 +49,7 @@ export class PostService {
 		response.data.pipe(writer)
 
 		return new Promise((resolve, reject) => {
-			writer.on('finish', resolve)
+			writer.on('finish', resolve(filePath))
 			writer.on('error', reject)
 		})
 	}
