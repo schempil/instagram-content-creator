@@ -16,26 +16,38 @@ export class PostService {
 
 		const file = await this.downloadPhoto(photo.id, keyword, photo.links.download)
 
-		setTimeout(() => {
-			this.cropPhoto(file)
-		}, 3000)
+			this.cropPhoto(file, keyword)
 
 		return photo
   }
 
-  async cropPhoto(file: any) {
+  async cropPhoto(file: any, keyword: string) {
   	const jimp = require('jimp')
+		const sizeOf = require('image-size')
+		const fs = require('fs')
+		const text2png = require('text2png')
 
 		const image = await jimp.read(file.filePath)
-		const font = await jimp.loadFont(jimp.FONT_SANS_128_BLACK)
 
 		image.cover(1080, 1080)
+		image.blur(5)
+
+		fs.writeFileSync('./hashtag.png', text2png(`#${keyword}`, {
+			font: '150px Lobster',
+			localFontPath: './fonts/Lobster/Lobster-Regular.ttf',
+			localFontName: 'Lobster',
+			borderWidth: 10,
+			borderColor: '#000',
+			color: '#000',
+			padding: 30
+		}))
 
 		const overlay = await jimp.read('./hashtag.png');
+		const dimensions = sizeOf('./hashtag.png')
 
-		image.blit(overlay, 0, 0);
+		image.blit(overlay, (1080 / 2) - (dimensions.width / 2), (1080 / 2) - (dimensions.height / 2))
 
-		await image.writeAsync(`${file.directory}/${file.id}_MOD_BLACK.png`)
+		await image.writeAsync(`${file.directory}/${file.id}_MOD.png`)
 
 		return new Promise((resolve, reject) => {
 			resolve(true)
@@ -45,7 +57,6 @@ export class PostService {
   async downloadPhoto(id: string, keyword: string, download: string): Promise<any> {
 
 		const fs = require('fs')
-
 		const directory = `./generations/${keyword}`
 
 		if (!fs.existsSync(directory)){
@@ -53,9 +64,7 @@ export class PostService {
 		}
 
 		const file = `${id}.png`
-
 		const filePath = `${directory}/${file}`
-
 		const writer = fs.createWriteStream(filePath)
 
 		const response = await this.httpService.axiosRef({
@@ -67,7 +76,9 @@ export class PostService {
 		response.data.pipe(writer)
 
 		return new Promise((resolve, reject) => {
-			writer.on('finish', resolve({ id, directory, file, filePath }))
+			writer.on('finish', () => {
+				writer.end(resolve({ id, directory, file, filePath }))
+			})
 			writer.on('error', reject)
 		})
 	}
