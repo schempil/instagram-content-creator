@@ -62,7 +62,7 @@ export class PostService {
 				localFontPath: './fonts/Lobster/Lobster-Regular.ttf',
 				localFontName: 'Lobster'
 			},
-  		MontserratRegular: {
+  		/*MontserratRegular: {
   			font: '150px Montserrat-Regular',
 				localFontPath: './fonts/Montserrat/Montserrat-Regular.ttf',
 				localFontName: 'Montserrag-Regular'
@@ -76,16 +76,25 @@ export class PostService {
   			font: '150px SourceSansPro-Regular',
 				localFontPath: './fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf',
 				localFontName: 'SourceSansPro-Regular'
-			},
+			},*/
 		}
 
-		const font = Object.values(fonts)[Math.floor(Math.random() * (6 - 1) + 1)]
+		const fontValues = Object.values(fonts)
+		const font = fontValues[Math.floor(Math.random() * (fontValues.length - 1) + 1)]
+
+		console.log('### text options', {
+			font: font.localFontName,
+			borderWidth: Math.round(Math.random()) > 0 ? 0 : 0,
+			borderColor: isWhite ? '#fff' : '#000',
+			backgroundColor: !isWhite ? '#fff' : '#000',
+			color: isWhite ? '#fff' : '#000',
+		})
 
 		fs.writeFileSync('./hashtag.png', text2png(`#${keyword}`, {
 			font: font.font,
 			localFontPath: font.localFontPath,
 			localFontName: font.localFontName,
-			borderWidth: Math.round(Math.random()) > 0 ? 10 : 0,
+			borderWidth: Math.round(Math.random()) > 0 ? 0 : 0,
 			borderColor: isWhite ? '#fff' : '#000',
 			backgroundColor: !isWhite ? '#fff' : '#000',
 			color: isWhite ? '#fff' : '#000',
