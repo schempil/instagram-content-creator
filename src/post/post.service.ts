@@ -16,7 +16,7 @@ export class PostService {
 
 		const file = await this.downloadPhoto(photo.id, keyword, photo.links.download)
 
-			this.cropPhoto(file, keyword)
+		await this.cropPhoto(file, keyword)
 
 		return photo
   }
@@ -30,7 +30,17 @@ export class PostService {
 		const image = await jimp.read(file.filePath)
 
 		image.cover(1080, 1080)
-		image.blur(5)
+		//image.blur(5)
+		//image.sepia()
+		//image.gaussian(15)
+
+		const hueSpin = Math.floor(Math.random() * 361) - 360
+
+		// LeanSip: 224
+
+		image.color([
+			{ apply: 'spin', params: [hueSpin] }
+		]);
 
 		fs.writeFileSync('./hashtag.png', text2png(`#${keyword}`, {
 			font: '150px Lobster',
