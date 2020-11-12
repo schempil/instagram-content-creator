@@ -1,9 +1,14 @@
 import { HttpService, Injectable } from '@nestjs/common';
 import { map } from 'rxjs/operators';
 
+const fs = require('fs')
+const jimp = require('jimp')
+const sizeOf = require('image-size')
+const text2png = require('text2png')
+
 @Injectable()
 export class PostService {
-  constructor(private httpService: HttpService) {}
+  constructor(private httpService: HttpService) { }
 
   async getPostForKeyword(keyword: string) {
     const clientId = process.env.UNSPLASH_CLIENT_ID
@@ -22,10 +27,6 @@ export class PostService {
   }
 
   async cropPhoto(file: any, keyword: string) {
-  	const jimp = require('jimp')
-		const sizeOf = require('image-size')
-		const fs = require('fs')
-		const text2png = require('text2png')
 
 		const image = await jimp.read(file.filePath)
 
@@ -80,7 +81,6 @@ export class PostService {
 
   async downloadPhoto(id: string, keyword: string, download: string): Promise<any> {
 
-		const fs = require('fs')
 		const directory = `./generations/${keyword}`
 
 		if (!fs.existsSync(directory)){
