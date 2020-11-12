@@ -5,13 +5,37 @@ import { map } from 'rxjs/operators';
 export class PostService {
   constructor(private httpService: HttpService) {}
 
-  getRandomPost() {
+  async getRandomPost() {
     const clientId = process.env.UNSPLASH_CLIENT_ID;
     const keyword = 'woman';
-    const requestString = `https://api.unsplash.com/search/photos/?client_id=${clientId}&query=${keyword}`;
+    const requestString = `https://api.unsplash.com/photos/random?client_id=${clientId}&query=${keyword}`
 
-    return this.httpService
-      .get(requestString)
-      .pipe(map((response) => response.data));
+	const photo = await this.httpService
+	  .get(requestString)
+	  .pipe(map((response) => response.data))
+	  .toPromise()
+
+    return photo
   }
+
+  async donwloadPhoto(download: string) {
+
+		const fs = require('fs')
+
+		const writer = fs.createWriteStream('./generations/image.png')
+
+		const response = await this.httpService.axiosRef({
+			url: download,
+			method: 'GET',
+			responseType: 'stream',
+		})
+
+		response.data.pipe(writer)
+
+		return new Promise((resolve, reject) => {
+			writer.on('finish', resolve)
+			writer.on('error', reject)
+		})
+
+	}
 }
