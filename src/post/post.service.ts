@@ -42,20 +42,37 @@ export class PostService {
 			{ apply: 'spin', params: [hueSpin] }
 		]);
 
+  	const color = Math.round(Math.random()) > 0 ? '#000' : '#FFF'
+
 		fs.writeFileSync('./hashtag.png', text2png(`#${keyword}`, {
 			font: '150px Lobster',
 			localFontPath: './fonts/Lobster/Lobster-Regular.ttf',
 			localFontName: 'Lobster',
-			borderWidth: 10,
-			borderColor: '#000',
-			color: '#000',
+			borderWidth: Math.round(Math.random()) > 0 ? 10 : 0,
+			borderColor: color,
+			color: color,
 			padding: 30
 		}))
 
 		const overlay = await jimp.read('./hashtag.png');
 		const dimensions = sizeOf('./hashtag.png')
 
-		image.blit(overlay, (1080 / 2) - (dimensions.width / 2), (1080 / 2) - (dimensions.height / 2))
+		const labelPositions = {
+			TOPLEFT: {x: 20, y: 20},
+			TOPRIGHT: {x: (1080 - dimensions.width - 20), y: 20},
+			BOTTOMLEFT: {x: 20, y: (1080 - dimensions.height - 20)},
+			BOTTOMRIGHT: {x: (1080 - dimensions.width - 20), y: (1080 - dimensions.height - 20)},
+			CENTERED: {x: (1080 / 2) - (dimensions.width / 2), y: (1080 / 2) - (dimensions.height / 2)},
+		}
+
+		const randomPosition = Math.floor(Math.random() * (5 - 1) + 1)
+
+		console.log('### randomPosition', randomPosition)
+		console.log('### Object.values(labelPositions)', Object.values(labelPositions))
+
+		const position = Object.values(labelPositions)[randomPosition]
+
+		image.blit(overlay, position.x, position.y)
 
 		await image.writeAsync(`${file.directory}/${file.id}_MOD.png`)
 
