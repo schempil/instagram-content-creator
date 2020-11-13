@@ -35,7 +35,9 @@ export class PostService {
 		//image.sepia()
 		//image.gaussian(15)
 
-		const hueSpin = Math.floor(Math.random() * 361) - 360
+		const hueSpin = Math.floor(Math.random() * 720) - 360
+
+		console.log('### hueSpin', hueSpin)
 
 		// LeanSip: 224
 
@@ -62,21 +64,16 @@ export class PostService {
 				localFontPath: './fonts/Lobster/Lobster-Regular.ttf',
 				localFontName: 'Lobster'
 			},
-  		/*MontserratRegular: {
-  			font: '150px Montserrat-Regular',
-				localFontPath: './fonts/Montserrat/Montserrat-Regular.ttf',
-				localFontName: 'Montserrag-Regular'
+  		Raleway: {
+  			font: '150px Raleway',
+				localFontPath: './fonts/Raleway/static/Raleway-Regular.ttf',
+				localFontName: 'Raleway'
 			},
-  		Roboto: {
-  			font: '150px Roboto-Regular',
-				localFontPath: './fonts/Roboto/Roboto-Regular.ttf',
-				localFontName: 'Roboto-Regular'
-			},
-  		SourceSansProRegular: {
-  			font: '150px SourceSansPro-Regular',
-				localFontPath: './fonts/Source_Sans_Pro/SourceSansPro-Regular.ttf',
-				localFontName: 'SourceSansPro-Regular'
-			},*/
+  		Xanh_Mono: {
+  			font: '150px XanhMono',
+				localFontPath: './fonts/Xanh_Mono/XanhMono-Regular.ttf',
+				localFontName: 'XanhMono'
+			}
 		}
 
 		const fontValues = Object.values(fonts)
