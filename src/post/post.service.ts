@@ -10,7 +10,7 @@ const text2png = require('text2png')
 export class PostService {
   constructor(private httpService: HttpService) { }
 
-  async getPostForKeyword(keyword: string) {
+  async getPostForKeyword(keyword: string): Promise<string> {
     const clientId = process.env.UNSPLASH_CLIENT_ID
     const requestString = `https://api.unsplash.com/photos/random?client_id=${clientId}&query=${keyword}`
 
@@ -21,12 +21,12 @@ export class PostService {
 
 		const file = await this.downloadPhoto(photo.id, keyword, photo.links.download)
 
-		await this.cropPhoto(file, keyword)
+		const moddedPhotoPath: string = await this.cropPhoto(file, keyword)
 
-		return photo
+		return moddedPhotoPath
   }
 
-  async cropPhoto(file: any, keyword: string) {
+  async cropPhoto(file: any, keyword: string): Promise<string> {
 
 		const image = await jimp.read(file.filePath)
 
@@ -113,10 +113,12 @@ export class PostService {
 
 		image.blit(overlay, position.x, position.y)
 
-		await image.writeAsync(`${file.directory}/${file.id}_MOD.png`)
+		const moddedPhotoPath = `${file.directory}/${file.id}_MOD.png`
+
+		await image.writeAsync(moddedPhotoPath)
 
 		return new Promise((resolve, reject) => {
-			resolve(true)
+			resolve(`${file.directory}/${file.id}_MOD.png`)
 		})
 	}
 
