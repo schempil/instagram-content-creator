@@ -31,15 +31,8 @@ export class PostService {
 		const image = await jimp.read(file.filePath)
 
 		image.cover(1080, 1080)
-		//image.blur(5)
-		//image.sepia()
-		//image.gaussian(15)
 
 		const hueSpin = Math.floor(Math.random() * 720) - 360
-
-		console.log('### hueSpin', hueSpin)
-
-		// LeanSip: 224
 
 		image.color([
 			{ apply: 'spin', params: [hueSpin] }
@@ -78,14 +71,6 @@ export class PostService {
 
 		const fontValues = Object.values(fonts)
 		const font = fontValues[Math.floor(Math.random() * (fontValues.length - 1) + 1)]
-
-		console.log('### text options', {
-			font: font.localFontName,
-			borderWidth: Math.round(Math.random()) > 0 ? 0 : 0,
-			borderColor: isWhite ? '#fff' : '#000',
-			backgroundColor: !isWhite ? '#fff' : '#000',
-			color: isWhite ? '#fff' : '#000',
-		})
 
 		fs.writeFileSync('./hashtag.png', text2png(`#${keyword}`, {
 			font: font.font,

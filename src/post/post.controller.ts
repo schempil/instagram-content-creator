@@ -12,7 +12,7 @@ export class PostController {
   async getPost(@Param() params, @Res() res: Response) {
     const filePath = await this.postService.getPostForKeyword(params.keyword)
 
-		const stream =createReadStream(filePath)
+		const stream = createReadStream(filePath)
 
 		res.set({
 			'Content-Type': 'image/png'
